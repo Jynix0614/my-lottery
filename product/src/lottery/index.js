@@ -71,7 +71,9 @@ function initAll() {
       EACH_COUNT = data.cfgData.EACH_COUNT;
       COMPANY = data.cfgData.COMPANY;
       HIGHLIGHT_CELL = createHighlight();
+      //给当前环境用做计算
       basicData.prizes = prizes;
+      //显示用
       setPrizes(prizes);
 
       TOTAL_CARDS = ROW_COUNT * COLUMN_COUNT;
@@ -296,6 +298,20 @@ function bindEvent() {
           exportData();
           addQipao(`数据已保存到EXCEL中。`);
         });
+        break;
+      // 编辑当前抽奖状态
+      case "edit":
+        //当前luckyUsers每存在1名A级，则增加2次抽奖
+        
+        console.log("currentPrize",currentPrize)
+        console.log("currentPrizeIndex",currentPrizeIndex)
+        console.log("prizes",prizes)
+        console.log("basicData.prizes",basicData.prizes)
+        console.log("luckyUsers",basicData.luckyUsers)
+        console.log("leftUsers",basicData.leftUsers)
+        console.log("currentLuckys",currentLuckys)
+        console.log("EACH_COUNT",EACH_COUNT)
+        console.log("分割线————————————————————————————————————————————————————————————————————————————")
         break;
     }
   });
@@ -691,7 +707,28 @@ function saveData() {
 
 function changePrize() {
   let luckys = basicData.luckyUsers[currentPrize.type];
+  console.log("changePrize().lucky", luckys)
+  var extraCount = 0
+  if (luckys) {
+    extraCount = 0
+    luckys.forEach(one => { 
+      console.log("one", one[3])
+      if (one[3] == 'K') { 
+        extraCount++
+      }
+    })
+  }
+  console.log("extraCount", extraCount)
+  var tempPrize = prizes;
   let luckyCount = (luckys ? luckys.length : 0) + EACH_COUNT[currentPrizeIndex];
+
+  // 过滤K开关 && 包含K &并且不是第一次
+  if (true) {
+    tempPrize[currentPrize.type].count = tempPrize[currentPrize.type].count + extraCount
+  }
+  
+  console.log("changePrize().tempPrize", tempPrize)
+  setPrizes(tempPrize)
   // 修改左侧prize的数目和百分比
   setPrizeData(currentPrizeIndex, luckyCount);
 }
@@ -712,7 +749,7 @@ function changeCard(cardIndex, user) {
 
   card.innerHTML = `<div class="company">${COMPANY}</div><div class="name">${
     user[1]
-  }</div><div class="details">${user[0] || ""}<br/>${user[2] || "PSST"}</div>`;
+  }</div><div class="details">${user[0] + user[3]|| ""}<br/>${user[2] || "PSST"}</div>`;
 }
 
 /**
