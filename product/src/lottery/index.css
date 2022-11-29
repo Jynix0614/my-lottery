@@ -59,6 +59,7 @@ a {
   width: 12vh;
   height: 16vh;
   box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+  /* background-image:url(../img/chip/X4-1.jpg); */
   border: 1px solid rgba(127, 255, 255, 0.25);
   text-align: center;
   cursor: default;
@@ -512,9 +513,10 @@ button:active {
   text-align: center;
   line-height: 5vh;
   font-size: 1.4vh;
-  color: #fff;
+  /* color: #fff; */
   cursor: pointer;
-  background-color: rgba(253, 105, 0, 0.9);
+  /* background-color: rgba(253, 105, 0, 0.9); */
+  background-image:url(../img/logo/logo-icon.png);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 

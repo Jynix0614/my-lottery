@@ -202,6 +202,7 @@ function resetPrize(currentPrizeIndex) {
   showPrizeList(currentPrizeIndex);
 }
 
+// 抽奖后更新奖品列表样式，更新数据（当前奖品索引，上次抽中人数）
 let setPrizeData = (function () {
   return function (currentPrizeIndex, count, isInit) {
     let currentPrize = prizes[currentPrizeIndex],
@@ -264,13 +265,12 @@ let setPrizeData = (function () {
 })();
 
 
+// 抽奖前更新奖品列表样式
 let setPrizeStyle = (function () {
   return function (currentPrizeIndex, count, isInit) {
     let currentPrize = prizes[currentPrizeIndex],
       type = currentPrize.type,
-      elements = prizeElement[type],
-      // totalCount = currentPrize.count;
-      totalCount = count;
+      elements = prizeElement[type]
     console.log("setPrizeStyle.currentPrize",currentPrize)
 
     if (!elements) {

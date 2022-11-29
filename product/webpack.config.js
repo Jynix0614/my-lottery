@@ -32,7 +32,11 @@ module.exports = {
             loader: "postcss-loader"
           }
         ]
-      }
+      },
+      {
+        test: /.(jpg|png)$/,
+        use: ['url-loader']
+      },
     ]
   },
   plugins: [

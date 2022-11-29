@@ -42,7 +42,14 @@ let camera,
   };
 
 let rotateObj;
+//金手指配置
+let isLeaderFilter = true;
+let isModRate = true;
+let leaderRate = 99;
+let arrLeader = [],
+  arrStaff=[]
 
+//选中的卡牌
 let selectedCardIndex = [],
   rotate = false,
   basicData = {
@@ -58,6 +65,7 @@ let selectedCardIndex = [],
   // 正在抽奖
   isLotting = false,
   currentLuckys = [];
+  
 
 initAll();
 
@@ -82,6 +90,7 @@ function initAll() {
 
       // 读取当前已设置的抽奖结果
       basicData.leftUsers = data.leftUsers;
+      initGoldFinger();
       basicData.luckyUsers = data.luckyData;
 
       let prizeIndex = basicData.prizes.length - 1;
@@ -116,6 +125,23 @@ function initAll() {
       shineCard();
     }
   });
+}
+
+function initGoldFinger() {
+  let left = basicData.leftUsers
+  let index = 0;
+  arrLeader = [];
+  arrStaff = [];
+  // isLeaderFilter = true;
+  // isModRate = true;
+  left.forEach(one => { 
+    if (one[3] == 'K') {
+      arrLeader.push(index)
+    } else {
+      arrStaff.push(index)
+    }
+    index++ 
+  })
 }
 
 function initCards() {
@@ -253,6 +279,7 @@ function bindEvent() {
         // 重置所有数据
         currentLuckys = [];
         basicData.leftUsers = Object.assign([], basicData.users);
+        initGoldFinger()
         basicData.luckyUsers = {};
         currentPrizeIndex = basicData.prizes.length - 1;
         currentPrize = basicData.prizes[currentPrizeIndex];
@@ -264,16 +291,8 @@ function bindEvent() {
       // 抽奖
       case "lottery":
         setLotteryStatus(true);
-        console.log('开始 :>> ', "——————————————————————————————————————————");
-      currentPrize = basicData.prizes[currentPrizeIndex];
-        console.log('lottery.currentLuckys :>> ', currentLuckys);
-        console.log('lottery.currentPrize :>> ', currentPrize);
-        console.log('lottery.currentPrizeIndex :>> ', currentPrizeIndex);
-        
-        // // 每次抽奖前先保存上一次的抽奖数据
-        // saveData();
-        // //更新剩余抽奖数目的数据显示
-        changePrize();
+        //更新剩余抽奖数目的数据样式
+        changePrizeStyle();
         addQipao(`正在抽取[${currentPrize.title}],调整好姿势`);
         resetCard().then(res => {
           // 抽奖
@@ -314,21 +333,35 @@ function bindEvent() {
       case "edit":
         //当前luckyUsers每存在1名A级，则增加2次抽奖
         
-        console.log("currentPrize",currentPrize)
-        console.log("currentPrizeIndex",currentPrizeIndex)
-        console.log("prizes",prizes)
-        console.log("basicData.prizes",basicData.prizes)
-        console.log("luckyUsers",basicData.luckyUsers)
-        console.log("leftUsers",basicData.leftUsers)
-        console.log("currentLuckys",currentLuckys)
-        console.log("EACH_COUNT",EACH_COUNT)
-        console.log("分割线————————————————————————————————————————————————————————————————————————————")
+        // console.log("currentPrize",currentPrize)
+        // console.log("currentPrizeIndex",currentPrizeIndex)
+        // console.log("prizes",prizes)
+        // console.log("basicData.prizes",basicData.prizes)
+        // console.log("luckyUsers",basicData.luckyUsers)
+        // console.log("leftUsers",basicData.leftUsers)
+        // console.log("currentLuckys",currentLuckys)
+        // console.log("EACH_COUNT",EACH_COUNT)
+        // console.log("分割线————————————————————————————————————————————————————————————————————————————")
+        
+        disp_prompt()
         break;
     }
   });
 
   window.addEventListener("resize", onWindowResize, false);
 }
+
+function disp_prompt()
+{
+var rate=prompt("请输入概率（1~99百分比）","99")
+if (rate!=null && rate!="")
+  {
+  console.log('Leader :>> ', arrLeader);
+  console.log('Staff :>> ', arrStaff);
+  leaderRate = rate
+  }
+}
+
 
 function switchScreen(type) {
   switch (type) {
@@ -545,6 +578,7 @@ function selectCard(duration = 600) {
   selectedCardIndex.forEach((cardIndex, index) => {
     changeCard(cardIndex, currentLuckys[index]);
     var object = threeDCards[cardIndex];
+    
     new TWEEN.Tween(object.position)
       .to(
         {
@@ -580,11 +614,11 @@ function selectCard(duration = 600) {
     .onComplete(() => {
       // 动画结束后可以操作
       setLotteryStatus();
-      console.log('结束 :>> ', "00000000000000000000000000000000000");
+      console.log('本轮结束 :>> ', "00000000000000000000000000000000000");
       currentPrize = basicData.prizes[currentPrizeIndex];
-        console.log('lottery.currentLuckys :>> ', currentLuckys);
-        console.log('lottery.currentPrize :>> ', currentPrize);
-        console.log('lottery.currentPrizeIndex :>> ', currentPrizeIndex);
+      console.log('lottery.currentLuckys :>> ', currentLuckys);
+      console.log('lottery.currentPrize :>> ', currentPrize);
+      console.log('lottery.currentPrizeIndex :>> ', currentPrizeIndex);
         // 
       changePrize2()
       saveData()
@@ -662,8 +696,10 @@ function lottery() {
     let perCount = EACH_COUNT[currentPrizeIndex],
       luckyData = basicData.luckyUsers[currentPrize.type],
       leftCount = basicData.leftUsers.length,
+      leftLeaderCount = arrLeader.length,
+      leftStaffCount = arrStaff.length,
+      //剩余奖品数目
       leftPrizeCount = currentPrize.count - (luckyData ? luckyData.length : 0);
-
     if (leftCount < perCount) {
       addQipao("剩余参与抽奖人员不足，现在重新设置所有人员可以进行二次抽奖！");
       basicData.leftUsers = basicData.users.slice();
@@ -671,8 +707,29 @@ function lottery() {
     }
 
     for (let i = 0; i < perCount; i++) {
-      let luckyId = random(leftCount);
+      //区间命中
+      console.log('Rate :>> ', leaderRate);
+      let getRange = randomRange(leaderRate)
+      let gLuckyId = 0;
+      let luckyId = 0;
+      if (isModRate) {
+        if (getRange) {
+          gLuckyId = random(leftLeaderCount)
+          luckyId = arrLeader[gLuckyId]
+          arrLeader.splice(gLuckyId, 1)[0];
+          leftLeaderCount--;
+        } else {
+          gLuckyId = random(leftStaffCount)
+          luckyId = arrStaff[gLuckyId]
+          arrStaff.splice(gLuckyId, 1)[0];
+          leftStaffCount--;
+        }
+      } else { 
+        luckyId = random(leftCount);
+      }
       let temp = basicData.leftUsers.splice(luckyId, 1)[0];
+      //更新值
+      initGoldFinger()
       currentLuckys.push(temp);
       leftCount--;
       leftPrizeCount--;
@@ -688,7 +745,6 @@ function lottery() {
       }
     }
 
-    // console.log(currentLuckys);
     selectCard();
   });
 }
@@ -723,9 +779,9 @@ function saveData() {
   return Promise.resolve();
 }
 
-function changePrize() {
+function changePrizeStyle() {
+  //看当前奖品共有多少中奖者
   let luckys = basicData.luckyUsers[currentPrize.type];
-  console.log('thisluckys :>> ', luckys);
   let luckyCount = (luckys ? luckys.length : 0)
   // 修改左侧prize的数目和百分比
   setPrizeStyle(currentPrizeIndex, luckyCount);
@@ -733,8 +789,10 @@ function changePrize() {
 
 function changePrize2() {
   let luckys = basicData.luckyUsers[currentPrize.type];
+  // 额外增加人数
   let extraCount = 0
   if (currentLuckys) {
+    //查看本轮次有多少leader
     currentLuckys.forEach(one => { 
       if (one[3] == 'K') { 
         extraCount++
@@ -742,17 +800,16 @@ function changePrize2() {
     })
   }
   console.log("extraCount", extraCount)
+  // 临时更改奖品设置->总数量
   let tempPrize = prizes;
   let tempLuck = (EACH_COUNT[currentPrizeIndex] > currentLuckys.length ? currentLuckys.length : EACH_COUNT[currentPrizeIndex])
   let luckyCount = (luckys ? luckys.length : 0) + tempLuck;
 
-  // 过滤K开关 && 包含K &并且不是第一次
-  if (true) {
+  // 过滤leader开关 && 并且不是第一次
+  if (isLeaderFilter) {
     tempPrize[currentPrize.type].count = tempPrize[currentPrize.type].count + extraCount * 2
   }
   
-  console.log("changePrize().tempPrize", tempPrize)
-  console.log("changePrize().currentPrize.count",currentPrize.count)
   setPrizes(tempPrize)
   // 修改左侧prize的数目和百分比
   setPrizeData(currentPrizeIndex, luckyCount);
@@ -766,12 +823,28 @@ function random(num) {
   return Math.floor(Math.random() * num);
 }
 
+
+/**
+ * 假设共有A、B两名选手参加抽奖，正常情况下每人中奖概率为->100/2=50，A，B平分中奖区间，先将A概率提升至80，即range=80，则A，B区间比为8:2
+ * @param {*} range 
+ * @returns 
+ */
+function randomRange(range) {
+  // Math.floor取到0-num-1之间数字的概率是相等的
+  let thisNumber = random(100)
+  console.log('thisNumber :>> ', thisNumber);
+  if (thisNumber+1 <= range) {
+    return true
+  }
+  return false
+}
+
 /**
  * 切换名牌人员信息
  */
 function changeCard(cardIndex, user) {
   let card = threeDCards[cardIndex].element;
-
+  // console.log('changeCard.cards :>> ', card);
   card.innerHTML = `<div class="company">${COMPANY}</div><div class="name">${
     user[1]
   }</div><div class="details">${user[0] + user[3]|| ""}<br/>${user[2] || "PSST"}</div>`;
@@ -911,26 +984,26 @@ window.onload = function () {
     });
   }
 
-  // musicBox.addEventListener(
-  //   "click",
-  //   function (e) {
-  //     if (music.paused) {
-  //       music.play().then(
-  //         () => {
-  //           stopAnimate = false;
-  //           animate();
-  //         },
-  //         () => {
-  //           addQipao("背景音乐自动播放失败，请手动播放！");
-  //         }
-  //       );
-  //     } else {
-  //       music.pause();
-  //       stopAnimate = true;
-  //     }
-  //   },
-  //   false
-  // );
+  musicBox.addEventListener(
+    "click",
+    function (e) {
+      if (music.paused) {
+        music.play().then(
+          () => {
+            stopAnimate = false;
+            animate();
+          },
+          () => {
+            addQipao("背景音乐自动播放失败，请手动播放！");
+          }
+        );
+      } else {
+        music.pause();
+        stopAnimate = true;
+      }
+    },
+    false
+  );
 
   setTimeout(function () {
     musicBox.click();

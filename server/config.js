@@ -18,49 +18,49 @@ const prizes = [
     count: 2,
     text: "特等奖",
     title: "神秘大礼",
-    img: "../img/secrit.jpg"
+    img: "../img/prizes/secrit.jpg"
   },
   {
     type: 2,
     count: 5,
     text: "一等奖",
     title: "MacBook Pro",
-    img: "../img/mbp16.jpg"
+    img: "../img/prizes/mbp16.jpg"
   },
   {
     type: 3,
     count: 6,
     text: "二等奖",
     title: "iphone 14 pro max",
-    img: "../img/iphone14promax.jpg"
+    img: "../img/prizes/iphone14promax.jpg"
   },
   {
     type: 4,
     count: 7,
     text: "三等奖",
     title: "大疆无人机",
-    img: "../img/spark.jpg"
+    img: "../img/prizes/spark.jpg"
   },
   {
     type: 5,
     count: 8,
     text: "四等奖",
     title: "Ninteodo Switch",
-    img: "../img/switch.jpg"
+    img: "../img/prizes/switch.jpg"
   },
   {
     type: 6,
     count: 9,
     text: "五等奖",
     title: "漫步者蓝牙耳机",
-    img: "../img/edifer.png"
+    img: "../img/prizes/edifer.png"
   },
   {
     type: 7,
     count: 20,
     text: "六等奖",
     title: "华为手环",
-    img: "../img/handring.png"
+    img: "../img/prizes/handring.png"
   }
 ];
 
