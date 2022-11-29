@@ -154,6 +154,7 @@ function setPrizes(pri) {
 }
 
 function showPrizeList(currentPrizeIndex) {
+  console.log("showPrizeList.prizes",prizes)
   let currentPrize = prizes[currentPrizeIndex];
   if (currentPrize.type === defaultType) {
     currentPrize.count === "不限制";
@@ -204,10 +205,10 @@ function resetPrize(currentPrizeIndex) {
 let setPrizeData = (function () {
   return function (currentPrizeIndex, count, isInit) {
     let currentPrize = prizes[currentPrizeIndex],
+      
       type = currentPrize.type,
       elements = prizeElement[type],
       totalCount = currentPrize.count;
-
     if (!elements) {
       elements = {
         box: document.querySelector(`#prize-item-${type}`),
@@ -262,6 +263,67 @@ let setPrizeData = (function () {
   };
 })();
 
+
+let setPrizeStyle = (function () {
+  return function (currentPrizeIndex, count, isInit) {
+    let currentPrize = prizes[currentPrizeIndex],
+      type = currentPrize.type,
+      elements = prizeElement[type],
+      // totalCount = currentPrize.count;
+      totalCount = count;
+    console.log("setPrizeStyle.currentPrize",currentPrize)
+
+    if (!elements) {
+      elements = {
+        box: document.querySelector(`#prize-item-${type}`),
+        bar: document.querySelector(`#prize-bar-${type}`),
+        text: document.querySelector(`#prize-count-${type}`)
+      };
+      prizeElement[type] = elements;
+    }
+
+    if (!prizeElement.prizeType) {
+      prizeElement.prizeType = document.querySelector("#prizeType");
+      prizeElement.prizeLeft = document.querySelector("#prizeLeft");
+      prizeElement.prizeText = document.querySelector("#prizeText");
+    }
+
+    if (isInit) {
+      for (let i = prizes.length - 1; i > currentPrizeIndex; i--) {
+        let type = prizes[i]["type"];
+        document.querySelector(`#prize-item-${type}`).className =
+          "prize-item done";
+        document.querySelector(`#prize-bar-${type}`).style.width = "0";
+        document.querySelector(`#prize-count-${type}`).textContent =
+          "0" + "/" + prizes[i]["count"];
+      }
+    }
+
+    if (lasetPrizeIndex !== currentPrizeIndex) {
+      let lastPrize = prizes[lasetPrizeIndex],
+        lastBox = document.querySelector(`#prize-item-${lastPrize.type}`);
+      lastBox.classList.remove("shine");
+      lastBox.classList.add("done");
+      elements.box && elements.box.classList.add("shine");
+      prizeElement.prizeType.textContent = currentPrize.text;
+      prizeElement.prizeText.textContent = currentPrize.title;
+
+      lasetPrizeIndex = currentPrizeIndex;
+    }
+
+    if (currentPrizeIndex === 0) {
+      prizeElement.prizeType.textContent = "特别奖";
+      prizeElement.prizeText.textContent = " ";
+      prizeElement.prizeLeft.textContent = "不限制";
+      return;
+    }
+    
+    count = currentPrize.count - count;
+    count = count < 0 ? 0 : count;
+    prizeElement.prizeLeft.textContent = count;
+  };
+})();
+
 function startMaoPao() {
   let len = DEFAULT_MESS.length,
     count = 5,
@@ -307,6 +369,7 @@ export {
   startMaoPao,
   showPrizeList,
   setPrizeData,
+  setPrizeStyle,
   addDanMu,
   setPrizes,
   resetPrize,

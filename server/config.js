@@ -59,7 +59,7 @@ const prizes = [
     type: 7,
     count: 20,
     text: "六等奖",
-    title: "华为手环7",
+    title: "华为手环",
     img: "../img/handring.png"
   }
 ];

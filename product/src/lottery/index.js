@@ -6,13 +6,15 @@ import {
   setPrizes,
   showPrizeList,
   setPrizeData,
-  resetPrize
+  resetPrize,
+  setPrizeStyle
 } from "./prizeList";
 import { NUMBER_MATRIX } from "./config.js";
 
 const ROTATE_TIME = 3000;
 const ROTATE_LOOP = 1000;
 const BASE_HEIGHT = 1080;
+
 
 let TOTAL_CARDS,
   btns = {
@@ -262,15 +264,24 @@ function bindEvent() {
       // 抽奖
       case "lottery":
         setLotteryStatus(true);
-        // 每次抽奖前先保存上一次的抽奖数据
-        saveData();
-        //更新剩余抽奖数目的数据显示
+        console.log('开始 :>> ', "——————————————————————————————————————————");
+      currentPrize = basicData.prizes[currentPrizeIndex];
+        console.log('lottery.currentLuckys :>> ', currentLuckys);
+        console.log('lottery.currentPrize :>> ', currentPrize);
+        console.log('lottery.currentPrizeIndex :>> ', currentPrizeIndex);
+        
+        // // 每次抽奖前先保存上一次的抽奖数据
+        // saveData();
+        // //更新剩余抽奖数目的数据显示
         changePrize();
+        addQipao(`正在抽取[${currentPrize.title}],调整好姿势`);
         resetCard().then(res => {
           // 抽奖
           lottery();
         });
-        addQipao(`正在抽取[${currentPrize.title}],调整好姿势`);
+    
+        
+
         break;
       // 重新抽奖
       case "reLottery":
@@ -525,7 +536,7 @@ function selectCard(duration = 600) {
       tag++;
     }
   }
-  console.log("currentLuckys->", currentLuckys)
+  
   let text = currentLuckys.map(item => item[1]);
   addQipao(
     `恭喜${text.join("、")}获得${currentPrize.title}, 新的一年必定旺旺旺。`
@@ -569,6 +580,14 @@ function selectCard(duration = 600) {
     .onComplete(() => {
       // 动画结束后可以操作
       setLotteryStatus();
+      console.log('结束 :>> ', "00000000000000000000000000000000000");
+      currentPrize = basicData.prizes[currentPrizeIndex];
+        console.log('lottery.currentLuckys :>> ', currentLuckys);
+        console.log('lottery.currentPrize :>> ', currentPrize);
+        console.log('lottery.currentPrizeIndex :>> ', currentPrizeIndex);
+        // 
+      changePrize2()
+      saveData()
     });
 }
 
@@ -633,6 +652,7 @@ function lottery() {
   //   btns.lottery.innerHTML = "开始抽奖";
   //   return;
   // }
+   
   btns.lottery.innerHTML = "结束抽奖";
   rotateBall().then(() => {
     // 将之前的记录置空
@@ -653,7 +673,6 @@ function lottery() {
     for (let i = 0; i < perCount; i++) {
       let luckyId = random(leftCount);
       let temp = basicData.leftUsers.splice(luckyId, 1)[0];
-      console.log("temp--->",temp)
       currentLuckys.push(temp);
       leftCount--;
       leftPrizeCount--;
@@ -689,8 +708,7 @@ function saveData() {
   curLucky = curLucky.concat(currentLuckys);
 
   basicData.luckyUsers[type] = curLucky;
-
-  if (currentPrize.count <= curLucky.length) {
+  if (currentPrize.count  <= curLucky.length) {
     currentPrizeIndex--;
     if (currentPrizeIndex <= -1) {
       currentPrizeIndex = 0;
@@ -707,27 +725,34 @@ function saveData() {
 
 function changePrize() {
   let luckys = basicData.luckyUsers[currentPrize.type];
-  console.log("changePrize().lucky", luckys)
-  var extraCount = 0
-  if (luckys) {
-    extraCount = 0
-    luckys.forEach(one => { 
-      console.log("one", one[3])
+  console.log('thisluckys :>> ', luckys);
+  let luckyCount = (luckys ? luckys.length : 0)
+  // 修改左侧prize的数目和百分比
+  setPrizeStyle(currentPrizeIndex, luckyCount);
+}
+
+function changePrize2() {
+  let luckys = basicData.luckyUsers[currentPrize.type];
+  let extraCount = 0
+  if (currentLuckys) {
+    currentLuckys.forEach(one => { 
       if (one[3] == 'K') { 
         extraCount++
       }
     })
   }
   console.log("extraCount", extraCount)
-  var tempPrize = prizes;
-  let luckyCount = (luckys ? luckys.length : 0) + EACH_COUNT[currentPrizeIndex];
+  let tempPrize = prizes;
+  let tempLuck = (EACH_COUNT[currentPrizeIndex] > currentLuckys.length ? currentLuckys.length : EACH_COUNT[currentPrizeIndex])
+  let luckyCount = (luckys ? luckys.length : 0) + tempLuck;
 
   // 过滤K开关 && 包含K &并且不是第一次
   if (true) {
-    tempPrize[currentPrize.type].count = tempPrize[currentPrize.type].count + extraCount
+    tempPrize[currentPrize.type].count = tempPrize[currentPrize.type].count + extraCount * 2
   }
   
   console.log("changePrize().tempPrize", tempPrize)
+  console.log("changePrize().currentPrize.count",currentPrize.count)
   setPrizes(tempPrize)
   // 修改左侧prize的数目和百分比
   setPrizeData(currentPrizeIndex, luckyCount);
@@ -886,26 +911,26 @@ window.onload = function () {
     });
   }
 
-  musicBox.addEventListener(
-    "click",
-    function (e) {
-      if (music.paused) {
-        music.play().then(
-          () => {
-            stopAnimate = false;
-            animate();
-          },
-          () => {
-            addQipao("背景音乐自动播放失败，请手动播放！");
-          }
-        );
-      } else {
-        music.pause();
-        stopAnimate = true;
-      }
-    },
-    false
-  );
+  // musicBox.addEventListener(
+  //   "click",
+  //   function (e) {
+  //     if (music.paused) {
+  //       music.play().then(
+  //         () => {
+  //           stopAnimate = false;
+  //           animate();
+  //         },
+  //         () => {
+  //           addQipao("背景音乐自动播放失败，请手动播放！");
+  //         }
+  //       );
+  //     } else {
+  //       music.pause();
+  //       stopAnimate = true;
+  //     }
+  //   },
+  //   false
+  // );
 
   setTimeout(function () {
     musicBox.click();
