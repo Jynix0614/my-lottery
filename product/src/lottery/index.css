@@ -122,6 +122,7 @@ button:active {
 }
 
 .highlight {
+  /* background-color: rgba(251, 255, 44, 0.85) !important; */
   background-color: rgba(253, 105, 0, 0.95) !important;
   box-shadow: 0 0 12px rgba(253, 105, 0, 0.95);
   border: 1px solid rgba(253, 105, 0, 0.25);
@@ -137,8 +138,34 @@ button:active {
 
 .prize.element {
   transition: background-color 1.5s ease-in 0.3s;
-  background-color: rgba(253, 105, 0, 0.85) !important;
+  background-color: rgba(253, 105, 0,  0.85) !important;
   box-shadow: 0 0 12px rgba(253, 105, 0, 0.95);
+}
+
+.SSR.element {
+  transition: background-color 1.5s ease-in 0.3s;
+  /* 中国红 */
+  background-color: rgba(255, 0, 0, 0.85) !important;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.95);
+}
+
+.SR.element {
+  transition: background-color 1.5s ease-in 0.3s;
+  background-color: rgba(255,0,204,0.85) !important;
+  box-shadow: 0 0 12px rgba(255,0,204, 0.95);
+}
+
+.R.element {
+  transition: background-color 1.5s ease-in 0.3s;
+  background-color: rgba(253, 105, 0,  0.85) !important;
+  box-shadow: 0 0 12px rgba(253, 105, 0, 0.95);
+}
+
+.N.element {
+  transition: background-color 1.5s ease-in 0.3s;
+  /* 群青*/
+  background-color: rgba(65,102,245, 0.85) !important;
+  box-shadow: 0 0 12px rgba(65,102,245, 0.95);
 }
 
 .prize .company,
@@ -208,7 +235,8 @@ button:active {
   height: 8vh;
   margin-right: 1.2vh;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: rgba(0,10,20,1);
+  /* background-color: rgba(0, 127, 127, 0.37); */
   text-shadow: 0 0 1vh rgba(0, 255, 255, 0.95);
   overflow: hidden;
 }
@@ -460,7 +488,7 @@ button:active {
 }
 
 .prize-mess {
-  color: #fff;
+  color: rgba(127, 255, 255, 0.75);
   line-height: 5vh;
   font-size: 1.6vh;
   margin: 2.4vh 0;
@@ -496,9 +524,11 @@ button:active {
 
 .music {
   position: fixed;
-  top: 3vh;
+  top: 1.5vh;
   right: 4vh;
   z-index: 5;
+  display: flex;
+  align-items: center;
 }
 
 .music-item {
@@ -507,17 +537,18 @@ button:active {
 }
 
 .music-box {
-  width: 5vh;
-  height: 5vh;
+  width: 10vh;
+  height: 10vh;
   border-radius: 50%;
   text-align: center;
-  line-height: 5vh;
   font-size: 1.4vh;
-  /* color: #fff; */
   cursor: pointer;
-  /* background-color: rgba(253, 105, 0, 0.9); */
   background-image:url(../img/logo/logo-icon.png);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background-size: 10vh;
+  background-repeat: no;
+}
+.logo-img{
+  width: 28vh;
 }
 
 .rotate-active {
@@ -542,13 +573,57 @@ button:active {
   position: fixed;
   bottom: 20px;
   right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
-
 .fixed-btn {
   margin: 20px 0 0;
   width: 200px;
   text-align: center;
   display: block;
+}
+/* form */
+.edit-area{
+  display: none;
+  border-radius: 8px;
+  height: 100%;
+  width: 160px;
+  text-align: left;
+  padding: 20px;
+  line-height: 40px;
+  line-height: 40px;
+  border:1px solid rgba(127, 255, 255, 0.75);
+  color: rgba(127, 255, 255, 0.95);
+}
+.btns {
+  display: flex;
+}
+.finger-input{
+  width: 70px;
+  border-radius: 8px;
+  color: rgba(127, 255, 255, 0.95);
+  background-color: rgba(127, 255, 255, 0.25);
+}
+.finger-double {
+  width: 70px;
+  border-radius: 8px;
+  color: rgba(127, 255, 255, 0.95);
+  background-color: rgba(127, 255, 255, 0.25);
+}
+
+.edit-btn{
+  font-size: 14px;
+  height: 30px;
+  border-radius: 4px;
+  color: rgba(127, 255, 255, 0.95);
+  background-color: rgba(127, 255, 255, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  margin:0 auto;
+  cursor: pointer;
 }
 
 #lottery {

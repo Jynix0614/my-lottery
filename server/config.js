@@ -17,50 +17,50 @@ const prizes = [
     type: 1,
     count: 2,
     text: "特等奖",
-    title: "神秘大礼",
-    img: "../img/prizes/secrit.jpg"
+    title: "宏光MINI EV",
+    img: "../img/prizes/wuling.png"
   },
   {
     type: 2,
     count: 5,
     text: "一等奖",
-    title: "MacBook Pro",
-    img: "../img/prizes/mbp16.jpg"
+    title: "iphone 14 Pro Max",
+    img: "../img/prizes/ip4pm.png"
   },
   {
     type: 3,
     count: 6,
     text: "二等奖",
-    title: "iphone 14 pro max",
-    img: "../img/prizes/iphone14promax.jpg"
+    title: "Ecovacs OMNI 洗地机器人",
+    img: "../img/prizes/ecovacs.png"
   },
   {
     type: 4,
     count: 7,
     text: "三等奖",
-    title: "大疆无人机",
-    img: "../img/prizes/spark.jpg"
+    title: "YAMAN ACE.5美容仪",
+    img: "../img/prizes/YAMAN.png"
   },
   {
     type: 5,
     count: 8,
     text: "四等奖",
-    title: "Ninteodo Switch",
-    img: "../img/prizes/switch.jpg"
+    title: "Nintendo Switch",
+    img: "../img/prizes/nintendo.png"
   },
   {
     type: 6,
     count: 9,
     text: "五等奖",
-    title: "漫步者蓝牙耳机",
-    img: "../img/prizes/edifer.png"
+    title: "WOLO 筋膜枪",
+    img: "../img/prizes/wolo.png"
   },
   {
     type: 7,
     count: 20,
     text: "六等奖",
-    title: "华为手环",
-    img: "../img/prizes/handring.png"
+    title: "爱优腾1年VIP",
+    img: "../img/prizes/AYT.png"
   }
 ];
 
@@ -72,7 +72,7 @@ const EACH_COUNT = [1, 2, 5, 6, 7, 8, 9, 10];
 /**
  * 卡片公司名称标识
  */
-const COMPANY = "水浒传";
+const COMPANY = "象帝先";
 
 module.exports = {
   prizes,

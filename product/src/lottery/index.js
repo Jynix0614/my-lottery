@@ -43,9 +43,10 @@ let camera,
 
 let rotateObj;
 //金手指配置
-let isLeaderFilter = true;
-let isModRate = true;
-let leaderRate = 99;
+let isSuperdDouble = true;
+let superDouble = 2;
+let isModRate = false;
+let leaderRate = null;
 let arrLeader = [],
   arrStaff=[]
 
@@ -135,7 +136,7 @@ function initGoldFinger() {
   // isLeaderFilter = true;
   // isModRate = true;
   left.forEach(one => { 
-    if (one[3] == 'K') {
+    if (one[3] == 'Y') {
       arrLeader.push(index)
     } else {
       arrStaff.push(index)
@@ -221,6 +222,8 @@ function initCards() {
   controls.addEventListener("change", render);
 
   bindEvent();
+  bindCancel();
+  bindSave()
 
   if (showTable) {
     switchScreen("enter");
@@ -231,6 +234,54 @@ function initCards() {
 
 function setLotteryStatus(status = false) {
   isLotting = status;
+}
+
+function bindSave(){
+  document.querySelector("#editSave").addEventListener("click", function (e){
+  let editDom=document.getElementById('editForm')
+  let rate=finger.percent.value||null;
+  if(finger.open.value==1){
+    isModRate=true;
+    leaderRate=rate;
+  }else if (finger.open.value==0){
+    isModRate=false;
+    leaderRate=null;
+  }
+
+  if(finger.open2.value==1){
+    isSuperdDouble = true;
+    superDouble = finger.double.value?  finger.double.value : 2
+  } else if (finger.open2.value==0){
+    superDouble = 2;
+    isSuperdDouble=false;
+  }
+// 保存完后隐藏form
+  editDom.style.display='none';
+  // 加倍
+  console.log('finger.isModRate :>> ', isModRate,'finger.rate:>>', leaderRate);
+  console.log('finger.isSuperDouble :>> ', isSuperdDouble,'finger.double:>>', superDouble);
+   
+  
+
+//  let regPos=/ ^\d+$/;
+//   if(!regPos.test(rate)||finger.open.value!==1){
+//     isModRate=false
+//   }else if(finger.open.value==1){
+//     rate=rate>99?99:rate;
+//     rate=rate<1?1:rate;
+//     isModRate=true;
+//     leaderRate=rate;
+//   }
+ 
+  
+ })}
+
+function bindCancel(){
+ // 绑定取消事件
+  document.querySelector("#editCancel").addEventListener("click", function (e){
+  let editDom=document.getElementById('editForm')
+  editDom.style.display='none'
+ })
 }
 
 /**
@@ -353,13 +404,29 @@ function bindEvent() {
 
 function disp_prompt()
 {
-var rate=prompt("请输入概率（1~99百分比）","99")
-if (rate!=null && rate!="")
-  {
-  console.log('Leader :>> ', arrLeader);
-  console.log('Staff :>> ', arrStaff);
-  leaderRate = rate
+  let editDom=document.getElementById('editForm')
+  console.log('editDom.style :>> ', editDom.style);
+  if(editDom.style.display!=='block'){
+    editDom.style.display='block'
+  }else{
+    editDom.style.display='none'
   }
+
+  
+// var rate=prompt("请输入概率（1~99百分比）","99")
+// if (rate!=null && rate!="")
+//   {
+//   console.log('Leader :>> ', arrLeader);
+//   console.log('Staff :>> ', arrStaff);
+//   leaderRate = rate
+//   }
+}
+function cancel(){
+ document.querySelector("#editForm").addEventListener("click", function (e){
+  let editDom=document.getElementById('editForm')
+   editDom.style.display='none'
+ })
+   
 }
 
 
@@ -603,7 +670,12 @@ function selectCard(duration = 600) {
       .easing(TWEEN.Easing.Exponential.InOut)
       .start();
 
-    object.element.classList.add("prize");
+    
+    let userinfo = object.element.innerHTML
+    let color = changeColor(userinfo)
+    console.log('Card.userinfo :>> ', userinfo);
+    object.element.classList.add(color);
+    
     tag++;
   });
 
@@ -623,6 +695,17 @@ function selectCard(duration = 600) {
       changePrize2()
       saveData()
     });
+}
+
+function changeColor(useInfoHtml) {
+  if (useInfoHtml.includes('>SSR<')) {
+    return "SSR"
+  } else if (useInfoHtml.includes('>SR<')) {
+    return "SR"
+  } else if (useInfoHtml.includes('>R<')) {
+    return "R"
+  } 
+  return "N"
 }
 
 /**
@@ -671,6 +754,10 @@ function resetCard(duration = 500) {
         selectedCardIndex.forEach(index => {
           let object = threeDCards[index];
           object.element.classList.remove("prize");
+          object.element.classList.remove("SSR");
+          object.element.classList.remove("SR");
+          object.element.classList.remove("R");
+          object.element.classList.remove("N");
         });
         resolve();
       });
@@ -712,6 +799,7 @@ function lottery() {
       let getRange = randomRange(leaderRate)
       let gLuckyId = 0;
       let luckyId = 0;
+      console.log('isModRate :>> ', isModRate);
       if (isModRate) {
         if (getRange) {
           gLuckyId = random(leftLeaderCount)
@@ -794,7 +882,7 @@ function changePrize2() {
   if (currentLuckys) {
     //查看本轮次有多少leader
     currentLuckys.forEach(one => { 
-      if (one[3] == 'K') { 
+      if (one[3] == 'Y') { 
         extraCount++
       }
     })
@@ -806,8 +894,8 @@ function changePrize2() {
   let luckyCount = (luckys ? luckys.length : 0) + tempLuck;
 
   // 过滤leader开关 && 并且不是第一次
-  if (isLeaderFilter) {
-    tempPrize[currentPrize.type].count = tempPrize[currentPrize.type].count + extraCount * 2
+  if (isSuperdDouble) {
+    tempPrize[currentPrize.type].count = tempPrize[currentPrize.type].count + extraCount * superDouble
   }
   
   setPrizes(tempPrize)
@@ -845,9 +933,9 @@ function randomRange(range) {
 function changeCard(cardIndex, user) {
   let card = threeDCards[cardIndex].element;
   // console.log('changeCard.cards :>> ', card);
-  card.innerHTML = `<div class="company">${COMPANY}</div><div class="name">${
+  card.innerHTML = `<div class="company">${user[2] || "象帝先"}</div><div class="name">${
     user[1]
-  }</div><div class="details">${user[0] + user[3]|| ""}<br/>${user[2] || "PSST"}</div>`;
+  }</div><div class="details">${user[0]|| ""}<br/>${user[4] || "PSST"}</div>`;
 }
 
 /**
@@ -994,7 +1082,7 @@ window.onload = function () {
             animate();
           },
           () => {
-            addQipao("背景音乐自动播放失败，请手动播放！");
+            addQipao("点击LOGO，即刻开启背景音乐！");
           }
         );
       } else {

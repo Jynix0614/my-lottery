@@ -7,7 +7,7 @@
     "start": "cd dist && node ../../server/index.js 9000",
     "serve": "npm run start",
     "build": "webpack --config webpack.dev.js --mode=production --progress --colors",
-    "dev": "webpack-dev-server --config webpack.dev.js --mode=development --progress --colors"
+    "dev": "webpack-dev-server --config webpack.dev.js --mode=development --progress --colors --host 172.18.20.50"
   },
   "author": "moshang",
   "license": "ISC",
