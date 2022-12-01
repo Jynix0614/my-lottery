@@ -138,15 +138,16 @@ button:active {
 
 .prize.element {
   transition: background-color 1.5s ease-in 0.3s;
-  background-color: rgba(253, 105, 0,  0.85) !important;
-  box-shadow: 0 0 12px rgba(253, 105, 0, 0.95);
+  
 }
 
 .SSR.element {
   transition: background-color 1.5s ease-in 0.3s;
   /* 中国红 */
-  background-color: rgba(255, 0, 0, 0.85) !important;
-  box-shadow: 0 0 12px rgba(255, 0, 0, 0.95);
+  /* background-color: rgba(255, 0, 0, 0.85) !important;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.95); */
+  background-color: rgba(253, 105, 0,  0.85) !important;
+  box-shadow: 0 0 12px rgba(253, 105, 0, 0.95);
 }
 
 .SR.element {
@@ -505,7 +506,7 @@ button:active {
 .qipao-container {
   position: fixed;
   right: 0;
-  top: 10vh;
+  top: 15vh;
   bottom: 1vh;
   width: 24vh;
   z-index: 2;

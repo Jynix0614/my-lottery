@@ -18,7 +18,7 @@ const prizes = [
     count: 2,
     text: "特等奖",
     title: "宏光MINI EV",
-    img: "../img/prizes/wuling.png"
+    img: "../img/prizes/miniev.png"
   },
   {
     type: 2,

@@ -795,11 +795,12 @@ function lottery() {
 
     for (let i = 0; i < perCount; i++) {
       //区间命中
-      console.log('Rate :>> ', leaderRate);
+      
       let getRange = randomRange(leaderRate)
+      console.log('是否命中区间 :>> ', getRange);
       let gLuckyId = 0;
       let luckyId = 0;
-      console.log('isModRate :>> ', isModRate);
+      
       if (isModRate) {
         if (getRange) {
           gLuckyId = random(leftLeaderCount)
@@ -919,7 +920,7 @@ function random(num) {
  */
 function randomRange(range) {
   // Math.floor取到0-num-1之间数字的概率是相等的
-  let thisNumber = random(100)
+  let thisNumber = random(101)
   console.log('thisNumber :>> ', thisNumber);
   if (thisNumber+1 <= range) {
     return true

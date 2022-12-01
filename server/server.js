@@ -208,8 +208,8 @@ function loadData() {
   let cfgData = {};
 
   // curData.users = loadXML(path.join(cwd, "data/users.xlsx"));
-  // curData.users = loadXML(path.join(dataBath, "data/users.xlsx"));
-  curData.users = loadXML(path.join(dataBath, "data/SH.xlsx"));
+  curData.users = loadXML(path.join(dataBath, "data/users.xlsx"));
+  // curData.users = loadXML(path.join(dataBath, "data/SH.xlsx"));
   log("原数据")
   log(curData.users)
   // 重新洗牌
